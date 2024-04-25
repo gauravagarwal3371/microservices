@@ -1,8 +1,9 @@
-package com.codergv.receiptms.dto;
+package com.codergv.receiptms.domain;
 
 import java.time.LocalDateTime;
 
-public class ReceiptDTO {
+public class ReceiptDomain {
+
     private String studentId;
     private String name;
     private String grade;

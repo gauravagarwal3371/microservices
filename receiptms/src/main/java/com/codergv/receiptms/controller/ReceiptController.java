@@ -4,6 +4,7 @@ import com.codergv.receiptms.dto.ReceiptDTO;
 import com.codergv.receiptms.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,14 +18,27 @@ public class ReceiptController {
         this.receiptService = receiptService;
     }
 
-    @GetMapping("/{studentId}")
-    public ResponseEntity<ReceiptDTO> generateReceipt(@PathVariable String studentId) {
-
-        ReceiptDTO receiptDTO = receiptService.generateReceipt(studentId);
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<?> generateReceipt(@PathVariable String studentId) {
+        ReceiptDTO receiptDTO =null;
+        try {
+            receiptDTO = receiptService.generateReceipt(studentId);
+        }catch (Exception e){
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while generating the receipt.");
+        }
         if (receiptDTO == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(receiptDTO);
+    }
+
+    @GetMapping("/reference/{referenceNo}")
+    public ResponseEntity<ReceiptDTO> getReceiptByReferenceNumber(@PathVariable String referenceNo) {
+
+        return receiptService.getReceiptByReferenceNumber(referenceNo)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }
