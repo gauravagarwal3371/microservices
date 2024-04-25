@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.codergv</groupId>
-	<artifactId>studentms</artifactId>
+	<artifactId>student-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>studentms</name>
+	<name>student-service</name>
 	<description>A microservice for managing student information.</description>
 	<properties>
 		<java.version>17</java.version>

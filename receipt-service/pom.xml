@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.codergv</groupId>
-	<artifactId>receiptms</artifactId>
+	<artifactId>receipt-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>receiptms</name>
+	<name>receipt-service</name>
 	<description>A microservice for storing and retrieving receipt information.</description>
 	<properties>
 		<java.version>17</java.version>

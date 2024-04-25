@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.codergv</groupId>
-	<artifactId>feecollms</artifactId>
+	<artifactId>fee-collection-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>feecollms</name>
+	<name>fee-collection-service</name>
 	<description>A microservice for fee collection.</description>
 	<properties>
 		<java.version>17</java.version>
