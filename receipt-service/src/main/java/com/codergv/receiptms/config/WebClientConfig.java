@@ -38,7 +38,7 @@ public class WebClientConfig {
     @Bean
     public WebClient feeCollectionWebClient() {
         return WebClient.builder()
-                .baseUrl("http://fee-coll-service")
+                .baseUrl("http://fee-collection-service")
                 .filter(filterFunction)
                 .build();
     }

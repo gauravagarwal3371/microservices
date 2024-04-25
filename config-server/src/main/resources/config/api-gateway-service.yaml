@@ -8,8 +8,8 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: fee-coll-service
-          uri: lb://fee-coll-service
+        - id: fee-collection-service
+          uri: lb://fee-collection-service
           predicates:
             - Path=/fees/**
         - id: receipt-service

@@ -1,5 +1,5 @@
 spring:
   application:
-    name: fee-coll-service
+    name: fee-collection-service
   config:
     import: "optional:configserver:http://localhost:8088"
