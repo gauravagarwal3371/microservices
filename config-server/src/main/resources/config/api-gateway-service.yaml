@@ -1,0 +1,22 @@
+server:
+  port: 8060
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: fee-coll-service
+          uri: lb://fee-coll-service
+          predicates:
+            - Path=/fees/**
+        - id: receipt-service
+          uri: lb://receipt-service
+          predicates:
+            - Path=/receipts/**
+        - id: student-service
+          uri: lb://student-service
+          predicates:
+            - Path=/students/**

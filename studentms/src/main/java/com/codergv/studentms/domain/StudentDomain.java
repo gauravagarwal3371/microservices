@@ -1,28 +1,11 @@
-package com.codergv.studentms.entity;
+package com.codergv.studentms.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
-@Entity
-public class Student {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class StudentDomain {
     private String name;
     private String studentId;
     private String grade;
     private String mobileNumber;
-    private String schoolName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private SchoolDomain school;
 
     public String getName() {
         return name;
@@ -56,11 +39,21 @@ public class Student {
         this.mobileNumber = mobileNumber;
     }
 
-    public String getSchoolName() {
-        return schoolName;
+    public SchoolDomain getSchool() {
+        return school;
     }
 
-    public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
+    public void setSchool(SchoolDomain schoolDomain) {
+        this.school = schoolDomain;
+    }
+
+    public void performBusinessLogic(StudentDomain studentDomain) {
+
+        studentDomain.setName(studentDomain.getName().toUpperCase());
+    }
+
+    public void performBusinessLogic1(StudentDomain studentDomain) {
+
+        studentDomain.setName(studentDomain.getName().toLowerCase());
     }
 }

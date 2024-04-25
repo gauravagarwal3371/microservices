@@ -1,10 +1,10 @@
-package com.codergv.feecollms;
+package com.codergv.apigateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FeeCollectionMSApplicationTests {
+class ApiGatewayApplicationTests {
 
 	@Test
 	void contextLoads() {

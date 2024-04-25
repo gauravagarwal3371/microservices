@@ -1,35 +1,46 @@
 package com.codergv.feecollms.service;
 
 
-import com.codergv.feecollms.entity.FeeCollection;
+import com.codergv.feecollms.domain.FeeCollectionDomain;
+import com.codergv.feecollms.dto.FeeCollectionRequestDTO;
+import com.codergv.feecollms.dto.FeeCollectionResponseDTO;
+import com.codergv.feecollms.entity.FeeCollectionDAO;
+import com.codergv.feecollms.mapper.FeeDomainAndDaoMapper;
+import com.codergv.feecollms.mapper.FeeDtoAndDomainMapper;
 import com.codergv.feecollms.repository.FeeCollectionRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class FeeCollectionService {
     private final FeeCollectionRepository feeCollectionRepository;
 
+    private final FeeDtoAndDomainMapper feeDtoAndDomainMapper;
+
+    private final FeeDomainAndDaoMapper feeDomainAndDaoMapper;
+
     @Autowired
-    public FeeCollectionService(FeeCollectionRepository feeCollectionRepository) {
+    public FeeCollectionService(FeeCollectionRepository feeCollectionRepository,FeeDtoAndDomainMapper feeDtoAndDomainMapper,
+                                FeeDomainAndDaoMapper feeDomainAndDaoMapper) {
         this.feeCollectionRepository = feeCollectionRepository;
+        this.feeDtoAndDomainMapper=feeDtoAndDomainMapper;
+        this.feeDomainAndDaoMapper=feeDomainAndDaoMapper;
     }
 
-    public FeeCollection collectFee(Long studentId, String studentName, double amountPaid, String paymentMethod, String schoolName) {
-        FeeCollection feeCollection = new FeeCollection();
-        feeCollection.setStudentId(studentId);
-        feeCollection.setStudentName(studentName);
-        feeCollection.setAmountPaid(amountPaid);
-        feeCollection.setTimestamp(LocalDateTime.now());
-        feeCollection.setPaymentMethod(paymentMethod);
-        feeCollection.setSchoolName(schoolName);
+    public FeeCollectionResponseDTO collectFee(FeeCollectionRequestDTO feeCollectionRequestDTO) {
 
-        return feeCollectionRepository.save(feeCollection);
+        FeeCollectionDomain feeCollectionDomain = feeDtoAndDomainMapper.toDomain(feeCollectionRequestDTO);
+        FeeCollectionDAO feeCollectionDAO = feeCollectionRepository.save(feeDomainAndDaoMapper.toEntity(feeCollectionDomain));
+        feeCollectionDomain = feeDomainAndDaoMapper.toDomain(feeCollectionDAO);
+        return feeDtoAndDomainMapper.toDTO(feeCollectionDomain);
+    }
+
+    public Optional<FeeCollectionResponseDTO> getCollectedFeeByStudentId(String studentId){
+        Optional<FeeCollectionDAO> feeCollectionDAO = feeCollectionRepository.findByStudentId(studentId);
+        return feeCollectionDAO.map(feeDomainAndDaoMapper::toDomain)
+                .map(feeDtoAndDomainMapper::toDTO);
     }
 }

@@ -1,7 +1,9 @@
 package com.codergv.studentms.controller;
 
-import com.codergv.studentms.entity.Student;
+import com.codergv.studentms.dto.StudentRequestDTO;
+import com.codergv.studentms.dto.StudentResponseDTO;
 import com.codergv.studentms.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,30 +21,30 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @PostMapping
+    public ResponseEntity<StudentResponseDTO> addStudent(@Valid @RequestBody StudentRequestDTO studentRequestDTO) {
+        StudentResponseDTO addedStudentResponseDTO = studentService.addStudent(studentRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedStudentResponseDTO);
+    }
+
     @GetMapping
-    public List<Student> getAllStudents() {
+    public List<StudentResponseDTO> getAllStudents() {
         return studentService.getAllStudents();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<StudentResponseDTO> getStudentById(@PathVariable String id) {
         return studentService.getStudentById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
-        Student addedStudent = studentService.addStudent(student);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedStudent);
-    }
-
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student updatedStudent) {
+    public ResponseEntity<StudentResponseDTO> updateStudent(@PathVariable String id, @RequestBody StudentRequestDTO studentRequestDTO) {
         return studentService.getStudentById(id)
-                .map(existingStudent -> {
-                    Student savedStudent = studentService.updateStudent(id, updatedStudent);
-                    return ResponseEntity.ok(savedStudent);
+                .map(existingStudentResponseDTO -> {
+                    StudentResponseDTO savedStudentResponseDTO = studentService.updateStudent(id, studentRequestDTO);
+                    return ResponseEntity.ok(savedStudentResponseDTO);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

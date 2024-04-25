@@ -1,9 +1,7 @@
 package com.codergv.studentms.repository;
 
-import com.codergv.studentms.entity.Student;
+import com.codergv.studentms.entity.StudentDAO;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<StudentDAO, Long> {
 }

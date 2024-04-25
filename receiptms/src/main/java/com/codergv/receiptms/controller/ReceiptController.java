@@ -1,8 +1,9 @@
 package com.codergv.receiptms.controller;
 
-import com.codergv.receiptms.entity.Receipt;
+import com.codergv.receiptms.dto.ReceiptDTO;
 import com.codergv.receiptms.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,14 +17,14 @@ public class ReceiptController {
         this.receiptService = receiptService;
     }
 
-    @PostMapping
-    public Receipt generateReceipt(@RequestParam Long studentId) {
-        return receiptService.generateReceipt(studentId);
-    }
+    @GetMapping("/{studentId}")
+    public ResponseEntity<ReceiptDTO> generateReceipt(@PathVariable String studentId) {
 
-    @GetMapping("/{receiptId}")
-    public Receipt getReceiptById(@PathVariable Long receiptId) {
-        return receiptService.getReceiptById(receiptId);
+        ReceiptDTO receiptDTO = receiptService.generateReceipt(studentId);
+        if (receiptDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(receiptDTO);
     }
 
 }

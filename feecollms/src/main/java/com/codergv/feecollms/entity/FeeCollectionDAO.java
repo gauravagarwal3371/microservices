@@ -7,16 +7,15 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class FeeCollection {
+public class FeeCollectionDAO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long studentId;
-    private String studentName;
+    private String studentId;
     private double amountPaid;
     private LocalDateTime timestamp;
-    private String paymentMethod;
-    private String schoolName;
+    private String cardType;
+    private String cardNumber;
 
     public Long getId() {
         return id;
@@ -26,20 +25,12 @@ public class FeeCollection {
         this.id = id;
     }
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
-    }
-
-    public String getStudentName() {
-        return studentName;
-    }
-
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
     }
 
     public double getAmountPaid() {
@@ -58,19 +49,19 @@ public class FeeCollection {
         this.timestamp = timestamp;
     }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
+    public String getCardType() {
+        return cardType;
     }
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
     }
 
-    public String getSchoolName() {
-        return schoolName;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setSchoolName(String schoolName) {
-        this.schoolName = schoolName;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
 }

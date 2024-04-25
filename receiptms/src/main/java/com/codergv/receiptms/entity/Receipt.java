@@ -11,7 +11,7 @@ public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long studentId;
+    private String studentId;
     private LocalDateTime timestamp;
 
     public Long getId() {
@@ -22,11 +22,11 @@ public class Receipt {
         this.id = id;
     }
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 
