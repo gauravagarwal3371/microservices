@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class FeeCollectionDTO {
 
     @NotNull
-    private Long studentId;
+    private String studentId;
 
     @PositiveOrZero
     private double amountPaid;
@@ -23,11 +23,11 @@ public class FeeCollectionDTO {
     @NotBlank
     private String cardNumber;
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 

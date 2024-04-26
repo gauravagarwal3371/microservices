@@ -1,5 +1,6 @@
 package com.codergv.receiptms.controller;
 
+import com.codergv.receiptms.dto.FeeCollectionDTO;
 import com.codergv.receiptms.dto.ReceiptDTO;
 import com.codergv.receiptms.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ public class ReceiptController {
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<?> generateReceipt(@PathVariable String studentId) {
+    public ResponseEntity<?> getReceiptByStudentId(@PathVariable String studentId) {
         ReceiptDTO receiptDTO =null;
         try {
-            receiptDTO = receiptService.generateReceipt(studentId);
+            receiptDTO = receiptService.getReceiptByStudentId(studentId);
         }catch (Exception e){
              return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while generating the receipt.");
@@ -39,6 +40,22 @@ public class ReceiptController {
         return receiptService.getReceiptByReferenceNumber(referenceNo)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+
+    @PostMapping("/fee/collect/receipt")
+    public ResponseEntity<?> generateReceipt(@RequestBody FeeCollectionDTO feeCollectionDTO) {
+        ReceiptDTO receiptDTO =null;
+        try {
+            receiptDTO = receiptService.generateReceipt(feeCollectionDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while generating the receipt.");
+        }
+        if (receiptDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(receiptDTO);
     }
 
 }

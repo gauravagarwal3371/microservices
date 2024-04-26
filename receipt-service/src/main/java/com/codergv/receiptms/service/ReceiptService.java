@@ -49,7 +49,7 @@ public class ReceiptService {
         return feeCollectionClient.getCollectedFeeByStudentId(studentId).getBody();
     }
     @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 1000))
-    public ReceiptDTO generateReceipt(String studentId) {
+    public ReceiptDTO getReceiptByStudentId(String studentId) {
         StudentDTO studentDTO = getStudentByIdWithRetry(studentId);
         FeeCollectionDTO feeCollectionDTO = getCollectedFeeByStudentIdWithRetry(studentId);
 
@@ -68,4 +68,16 @@ public class ReceiptService {
                 .map(receiptDtoAndDomainMapper::toDTO);
     }
 
+    @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    public ReceiptDTO generateReceipt(FeeCollectionDTO feeCollectionDTO) {
+        StudentDTO studentDTO = getStudentByIdWithRetry(feeCollectionDTO.getStudentId());
+
+        ReceiptDTO receiptDTO = receiptDtoMapper.receiptDTO(studentDTO, feeCollectionDTO);
+        ReceiptDomain receiptDomain = receiptDtoAndDomainMapper.toDomain(receiptDTO);
+        receiptDomain.setReference(ReferenceNumberUtil.getRandomReferenceNumber());
+        ReceiptDAO receiptDAO = receiptDomainAndDaoMapper.toEntity(receiptDomain);
+
+        receiptDAO = receiptRepository.save(receiptDAO);
+        return receiptDtoAndDomainMapper.toDTO(receiptDomainAndDaoMapper.toDomain(receiptDAO));
+    }
 }
