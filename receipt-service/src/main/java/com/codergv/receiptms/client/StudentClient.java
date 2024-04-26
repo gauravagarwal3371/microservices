@@ -9,7 +9,7 @@ import org.springframework.web.service.annotation.HttpExchange;
 @HttpExchange
 public interface StudentClient {
 
-    @GetExchange("students/{id}")
+    @GetExchange("students/student/{id}")
     public ResponseEntity<StudentDTO> getStudentById(@PathVariable String id);
 
 }

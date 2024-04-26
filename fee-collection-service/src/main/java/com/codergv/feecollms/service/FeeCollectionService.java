@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -59,8 +60,8 @@ public class FeeCollectionService {
        return receiptClient.generateReceipt(feeCollectionResponseDTO);
     }
 
-    public Optional<FeeCollectionResponseDTO> getCollectedFeeByStudentId(String studentId){
-        Optional<FeeCollectionDAO> feeCollectionDAO = feeCollectionRepository.findByStudentId(studentId);
+    public Optional<List<FeeCollectionResponseDTO>> getCollectedFeeByStudentId(String studentId){
+        Optional<List<FeeCollectionDAO>> feeCollectionDAO = feeCollectionRepository.findByStudentId(studentId);
         return feeCollectionDAO.map(feeDomainAndDaoMapper::toDomain)
                 .map(feeDtoAndDomainMapper::toDTO);
     }

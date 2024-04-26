@@ -1,10 +1,15 @@
 package com.codergv.studentms.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class StudentRequestDTO {
 
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String grade;
     private String mobileNumber;
+    @NotEmpty
     private SchoolDTO school;
 
     public String getName() {

@@ -8,6 +8,7 @@ public class FeeCollectionRequestDTO {
     @NotEmpty
     private String studentId;
     @Positive
+    @NotEmpty
     private double amountPaid;
     @NotEmpty
     private String cardType;
