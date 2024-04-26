@@ -12,6 +12,8 @@ import com.codergv.receiptms.mapper.ReceiptDtoAndDomainMapper;
 import com.codergv.receiptms.mapper.ReceiptDtoMapper;
 import com.codergv.receiptms.repository.ReceiptRepository;
 import com.codergv.receiptms.util.ReferenceNumberUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -21,6 +23,7 @@ import java.util.Optional;
 
 @Service
 public class ReceiptService {
+    private static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
     private final ReceiptRepository receiptRepository;
     private final ReceiptDtoMapper receiptDtoMapper;
     private final ReceiptDtoAndDomainMapper receiptDtoAndDomainMapper;
@@ -42,14 +45,17 @@ public class ReceiptService {
 
 
     public StudentDTO getStudentByIdWithRetry(String studentId) {
+        logger.info("Fetching student from getStudentByIdWithRetry for studentId: {}", studentId);
         return studentClient.getStudentById(studentId).getBody();
     }
 
     public FeeCollectionDTO getCollectedFeeByStudentIdWithRetry(String studentId) {
+        logger.info("Fetching fee collection from getCollectedFeeByStudentIdWithRetry for studentId: {}", studentId);
         return feeCollectionClient.getCollectedFeeByStudentId(studentId).getBody();
     }
     @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public ReceiptDTO getReceiptByStudentId(String studentId) {
+        logger.info("Fetching receipt for studentId: {}", studentId);
         StudentDTO studentDTO = getStudentByIdWithRetry(studentId);
         FeeCollectionDTO feeCollectionDTO = getCollectedFeeByStudentIdWithRetry(studentId);
 
@@ -57,12 +63,13 @@ public class ReceiptService {
         ReceiptDomain receiptDomain = receiptDtoAndDomainMapper.toDomain(receiptDTO);
         receiptDomain.setReference(ReferenceNumberUtil.getRandomReferenceNumber());
         ReceiptDAO receiptDAO = receiptDomainAndDaoMapper.toEntity(receiptDomain);
-
         receiptDAO = receiptRepository.save(receiptDAO);
+        logger.info("Receipt generated successfully for studentId: {}", studentId);
         return receiptDtoAndDomainMapper.toDTO(receiptDomainAndDaoMapper.toDomain(receiptDAO));
     }
 
     public Optional<ReceiptDTO> getReceiptByReferenceNumber(String referenceNo) {
+        logger.info("Fetching receipt with referenceNo: {}", referenceNo);
         return receiptRepository.findByReference(referenceNo)
                 .map(receiptDomainAndDaoMapper::toDomain)
                 .map(receiptDtoAndDomainMapper::toDTO);
@@ -70,6 +77,7 @@ public class ReceiptService {
 
     @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 1000))
     public ReceiptDTO generateReceipt(FeeCollectionDTO feeCollectionDTO) {
+        logger.info("Generating receipt using  feeCollectionDTO: {}", feeCollectionDTO);
         StudentDTO studentDTO = getStudentByIdWithRetry(feeCollectionDTO.getStudentId());
 
         ReceiptDTO receiptDTO = receiptDtoMapper.receiptDTO(studentDTO, feeCollectionDTO);
@@ -78,6 +86,7 @@ public class ReceiptService {
         ReceiptDAO receiptDAO = receiptDomainAndDaoMapper.toEntity(receiptDomain);
 
         receiptDAO = receiptRepository.save(receiptDAO);
+        logger.info("Receipt generated successfully: {}", receiptDomain);
         return receiptDtoAndDomainMapper.toDTO(receiptDomainAndDaoMapper.toDomain(receiptDAO));
     }
 }

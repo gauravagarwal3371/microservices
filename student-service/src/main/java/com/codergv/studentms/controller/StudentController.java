@@ -34,7 +34,7 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedStudentResponseDTO);
     }
 
-    @GetMapping("/student")
+    @GetMapping
     public List<StudentResponseDTO> getAllStudents() {
         logger.info("Fetching all students");
         List<StudentResponseDTO> allStudents = studentService.getAllStudents();
