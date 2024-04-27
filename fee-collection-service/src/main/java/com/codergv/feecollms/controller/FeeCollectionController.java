@@ -35,6 +35,10 @@ public class FeeCollectionController {
             feeCollectionService.setShouldExecuteGenerateReceipt(true);
             receiptResponseEntity = feeCollectionService.collectFeeAndGenerateReceipt(feeCollectionRequestDTO);
         }catch (WebClientResponseException e){
+            if(e.getStatusCode().is4xxClientError()){
+                logger.error("Student not found with the given studentId: {}", feeCollectionRequestDTO.getStudentId());
+                throw new NotFoundException("Student not found with the given studentId: " + feeCollectionRequestDTO.getStudentId());
+            }
             logger.error("Error while collecting fee and generating receipt: {}", e.getMessage());
             throw new FeeCollectionException("Transaction successful, but receipt not generated. " +
                     "Please fetch from the app in some time");

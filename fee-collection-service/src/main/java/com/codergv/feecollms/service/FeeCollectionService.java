@@ -2,10 +2,13 @@ package com.codergv.feecollms.service;
 
 
 import com.codergv.feecollms.client.ReceiptClient;
+import com.codergv.feecollms.client.StudentClient;
 import com.codergv.feecollms.domain.FeeCollectionDomain;
 import com.codergv.feecollms.dto.FeeCollectionRequestDTO;
 import com.codergv.feecollms.dto.FeeCollectionResponseDTO;
+import com.codergv.feecollms.dto.StudentDTO;
 import com.codergv.feecollms.entity.FeeCollectionDAO;
+import com.codergv.feecollms.exception.NotFoundException;
 import com.codergv.feecollms.mapper.FeeDomainAndDaoMapper;
 import com.codergv.feecollms.mapper.FeeDtoAndDomainMapper;
 import com.codergv.feecollms.repository.FeeCollectionRepository;
@@ -33,15 +36,18 @@ public class FeeCollectionService {
 
     private final ReceiptClient receiptClient;
 
+    private final StudentClient studentClient;
+
     private final AtomicBoolean shouldExecuteGenerateReceipt = new AtomicBoolean(true);
 
     @Autowired
     public FeeCollectionService(FeeCollectionRepository feeCollectionRepository,FeeDtoAndDomainMapper feeDtoAndDomainMapper,
-                                FeeDomainAndDaoMapper feeDomainAndDaoMapper,ReceiptClient receiptClient) {
+                                FeeDomainAndDaoMapper feeDomainAndDaoMapper,ReceiptClient receiptClient,StudentClient studentClient) {
         this.feeCollectionRepository = feeCollectionRepository;
         this.feeDtoAndDomainMapper=feeDtoAndDomainMapper;
         this.feeDomainAndDaoMapper=feeDomainAndDaoMapper;
         this.receiptClient = receiptClient;
+        this.studentClient = studentClient;
     }
 
     @Retryable(value = {Exception.class}, maxAttempts = 3, backoff = @Backoff(delay = 1000))
@@ -49,6 +55,7 @@ public class FeeCollectionService {
         logger.info("Collecting fee and generating receipt for student: {}", feeCollectionRequestDTO.getStudentId());
         FeeCollectionDomain feeCollectionDomain = null;
         if(shouldExecuteGenerateReceipt.get()) {
+            ResponseEntity<StudentDTO> studentDTO = studentClient.getStudentById(feeCollectionRequestDTO.getStudentId());
             feeCollectionDomain = feeDtoAndDomainMapper.toDomain(feeCollectionRequestDTO);
             FeeCollectionDAO feeCollectionDAO = feeCollectionRepository.save(feeDomainAndDaoMapper.toEntity(feeCollectionDomain));
             feeCollectionDomain = feeDomainAndDaoMapper.toDomain(feeCollectionDAO);

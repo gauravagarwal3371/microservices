@@ -57,10 +57,17 @@ class FeeCollectionControllerTest {
     }
 
     @Test
-    void testCollectFeeAndGenerateReceipt_WebClientResponseException() {
-        when(feeCollectionService.collectFeeAndGenerateReceipt(any())).thenThrow(new WebClientResponseException(HttpStatus.BAD_REQUEST.value(), "Error", null, null, null));
+    void testCollectFeeAndGenerateReceipt_WebClientResponse5XXException() {
+        when(feeCollectionService.collectFeeAndGenerateReceipt(any())).thenThrow(new WebClientResponseException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error", null, null, null));
 
         assertThrows(FeeCollectionException.class, () -> feeCollectionController.collectFeeAndGenerateReceipt(validRequest));
+    }
+
+    @Test
+    void testCollectFeeAndGenerateReceipt_WebClientResponse4XXException() {
+        when(feeCollectionService.collectFeeAndGenerateReceipt(any())).thenThrow(new WebClientResponseException(HttpStatus.NOT_FOUND.value(), "Error", null, null, null));
+
+        assertThrows(NotFoundException.class, () -> feeCollectionController.collectFeeAndGenerateReceipt(validRequest));
     }
 
     @Test

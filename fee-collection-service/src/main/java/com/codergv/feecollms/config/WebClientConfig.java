@@ -1,6 +1,7 @@
 package com.codergv.feecollms.config;
 
 import com.codergv.feecollms.client.ReceiptClient;
+import com.codergv.feecollms.client.StudentClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.reactive.LoadBalancedExchangeFilterFunction;
 import org.springframework.context.annotation.Bean;
@@ -32,5 +33,22 @@ public class WebClientConfig {
                 .builder(WebClientAdapter.forClient(receiptWebClient()))
                 .build();
         return httpServiceProxyFactory.createClient(ReceiptClient.class);
+    }
+
+    @Bean
+    public WebClient studentWebClient() {
+        return WebClient.builder()
+                .baseUrl("http://student-service")
+                .filter(filterFunction)
+                .build();
+    }
+
+    @Bean
+    public StudentClient studentClient() {
+        HttpServiceProxyFactory httpServiceProxyFactory
+                = HttpServiceProxyFactory
+                .builder(WebClientAdapter.forClient(studentWebClient()))
+                .build();
+        return httpServiceProxyFactory.createClient(StudentClient.class);
     }
 }

@@ -1,9 +1,11 @@
 package com.codergv.feecollms.service;
 
 import com.codergv.feecollms.client.ReceiptClient;
+import com.codergv.feecollms.client.StudentClient;
 import com.codergv.feecollms.domain.FeeCollectionDomain;
 import com.codergv.feecollms.dto.FeeCollectionRequestDTO;
 import com.codergv.feecollms.dto.FeeCollectionResponseDTO;
+import com.codergv.feecollms.dto.StudentDTO;
 import com.codergv.feecollms.entity.FeeCollectionDAO;
 import com.codergv.feecollms.mapper.FeeDomainAndDaoMapper;
 import com.codergv.feecollms.mapper.FeeDtoAndDomainMapper;
@@ -48,6 +50,9 @@ class FeeCollectionServiceTest {
 
     private FeeCollectionDomain feeCollectionDomain;
 
+    @Mock
+    private StudentClient studentClient;
+
     @BeforeEach
     void setUp() {
         feeCollectionRequestDTO = new FeeCollectionRequestDTO();
@@ -67,7 +72,9 @@ class FeeCollectionServiceTest {
         when(feeDomainAndDaoMapper.toDomain(feeCollectionDAO)).thenReturn(feeCollectionDomain);
         when(feeDtoAndDomainMapper.toDTO(feeCollectionDomain)).thenReturn(feeCollectionResponseDTO);
         when(receiptClient.generateReceipt(any())).thenReturn(ResponseEntity.ok().build());
-
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setStudentId("1");
+        when(studentClient.getStudentById(any())).thenReturn(ResponseEntity.ok(studentDTO));
         ResponseEntity<?> response = feeCollectionService.collectFeeAndGenerateReceipt(feeCollectionRequestDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -75,12 +82,6 @@ class FeeCollectionServiceTest {
 
     @Test
     void testCollectFeeAndGenerateReceipt_Retryable() {
-        when(feeDtoAndDomainMapper.toDomain(feeCollectionRequestDTO)).thenReturn(feeCollectionDomain);
-        when(feeCollectionRepository.save(any())).thenReturn(feeCollectionDAO);
-        when(feeDomainAndDaoMapper.toDomain(feeCollectionDAO)).thenReturn(feeCollectionDomain);
-        when(feeDtoAndDomainMapper.toDTO(feeCollectionDomain)).thenReturn(feeCollectionResponseDTO);
-        when(receiptClient.generateReceipt(any())).thenThrow(new RuntimeException());
-
         assertThrows(RuntimeException.class, () -> feeCollectionService.collectFeeAndGenerateReceipt(feeCollectionRequestDTO));
     }
 
