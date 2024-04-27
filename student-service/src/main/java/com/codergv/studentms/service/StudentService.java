@@ -89,7 +89,7 @@ public class StudentService {
             studentDomain.performBusinessLogic(studentDomain);
             StudentDAO studentDao = studentDomainAndDaoMapper.toEntity(studentDomain);
             SchoolDAO schoolDAO = schoolRepository.findByName(studentDao.getSchool().getName());
-            if (studentDao.getId() != null) {
+            if (schoolDAO.getId() != null) {
                 studentDao.setSchool(schoolDAO);
             } else {
                 schoolDAO = schoolRepository.save(studentDao.getSchool());
