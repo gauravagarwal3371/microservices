@@ -56,4 +56,16 @@ public class StudentDomain {
 
         studentDomain.setName(studentDomain.getName().toLowerCase());
     }
+
+    @Override
+    public String toString() {
+        return "StudentDomain{" +
+                "name='" + name + '\'' +
+                ", studentId='" + studentId + '\'' +
+                ", grade='" + grade + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", school=" + school +
+                '}';
+    }
 }
+

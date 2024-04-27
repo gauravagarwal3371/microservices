@@ -56,4 +56,15 @@ public class StudentDAO {
     public void setSchool(SchoolDAO school) {
         this.school = school;
     }
+
+    @Override
+    public String toString() {
+        return "StudentDAO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", grade='" + grade + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", school=" + school +
+                '}';
+    }
 }

@@ -62,4 +62,15 @@ public class FeeCollectionDTO {
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
+    @Override
+    public String toString() {
+        return "FeeCollectionDTO{" +
+                "studentId='" + studentId + '\'' +
+                ", amountPaid=" + amountPaid +
+                ", timestamp=" + timestamp +
+                ", cardType='" + cardType + '\'' +
+                ", cardNumber='" + cardNumber + '\'' +
+                '}';
+    }
 }

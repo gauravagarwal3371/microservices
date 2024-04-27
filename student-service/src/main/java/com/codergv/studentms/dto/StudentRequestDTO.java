@@ -43,4 +43,14 @@ public class StudentRequestDTO {
     public void setSchool(SchoolDTO school) {
         this.school = school;
     }
+
+    @Override
+    public String toString() {
+        return "StudentRequestDTO{" +
+                "name='" + name + '\'' +
+                ", grade='" + grade + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", school=" + school +
+                '}';
+    }
 }

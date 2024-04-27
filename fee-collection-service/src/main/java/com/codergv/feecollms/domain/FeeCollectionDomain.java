@@ -49,4 +49,15 @@ public class FeeCollectionDomain {
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
+    @Override
+    public String toString() {
+        return "FeeCollectionDomain{" +
+                "studentId=" + studentId +
+                ", amountPaid=" + amountPaid +
+                ", timestamp=" + timestamp +
+                ", cardType='" + cardType + '\'' +
+                ", cardNumber='" + cardNumber + '\'' +
+                '}';
+    }
 }

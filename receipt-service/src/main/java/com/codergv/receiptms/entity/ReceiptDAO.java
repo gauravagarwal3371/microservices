@@ -104,4 +104,20 @@ public class ReceiptDAO {
     public void setCardType(String cardType) {
         this.cardType = cardType;
     }
+
+    @Override
+    public String toString() {
+        return "ReceiptDAO{" +
+                "id=" + id +
+                ", studentId='" + studentId + '\'' +
+                ", name='" + name + '\'' +
+                ", grade='" + grade + '\'' +
+                ", school='" + school + '\'' +
+                ", reference='" + reference + '\'' +
+                ", amountPaid=" + amountPaid +
+                ", timestamp=" + timestamp +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", cardType='" + cardType + '\'' +
+                '}';
+    }
 }

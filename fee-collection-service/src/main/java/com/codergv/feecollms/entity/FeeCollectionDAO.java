@@ -67,4 +67,16 @@ public class FeeCollectionDAO {
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
+
+    @Override
+    public String toString() {
+        return "FeeCollectionDAO{" +
+                "id=" + id +
+                ", studentId='" + studentId + '\'' +
+                ", amountPaid=" + amountPaid +
+                ", timestamp=" + timestamp +
+                ", cardType='" + cardType + '\'' +
+                ", cardNumber='" + cardNumber + '\'' +
+                '}';
+    }
 }

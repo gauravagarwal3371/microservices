@@ -28,4 +28,12 @@ public class SchoolDAO {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "SchoolDAO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
