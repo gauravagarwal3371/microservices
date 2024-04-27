@@ -19,6 +19,8 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,7 +51,7 @@ public class ReceiptService {
         return studentClient.getStudentById(studentId).getBody();
     }
 
-    public FeeCollectionDTO getCollectedFeeByStudentIdWithRetry(String studentId) {
+    public List<FeeCollectionDTO> getCollectedFeeByStudentIdWithRetry(String studentId) {
         logger.info("Fetching fee collection from getCollectedFeeByStudentIdWithRetry for studentId: {}", studentId);
         return feeCollectionClient.getCollectedFeeByStudentId(studentId).getBody();
     }
@@ -57,9 +59,9 @@ public class ReceiptService {
     public ReceiptDTO getReceiptByStudentId(String studentId) {
         logger.info("Fetching receipt for studentId: {}", studentId);
         StudentDTO studentDTO = getStudentByIdWithRetry(studentId);
-        FeeCollectionDTO feeCollectionDTO = getCollectedFeeByStudentIdWithRetry(studentId);
-
-        ReceiptDTO receiptDTO = receiptDtoMapper.receiptDTO(studentDTO, feeCollectionDTO);
+        List<FeeCollectionDTO> feeCollectionDTO = getCollectedFeeByStudentIdWithRetry(studentId);
+        Optional<FeeCollectionDTO> latestFeeCollectionDTO = feeCollectionDTO.stream().sorted(Comparator.comparing(FeeCollectionDTO::getTimestamp).reversed()).findFirst();
+        ReceiptDTO receiptDTO = receiptDtoMapper.receiptDTO(studentDTO, latestFeeCollectionDTO.get());
         ReceiptDomain receiptDomain = receiptDtoAndDomainMapper.toDomain(receiptDTO);
         receiptDomain.setReference(ReferenceNumberUtil.getRandomReferenceNumber());
         ReceiptDAO receiptDAO = receiptDomainAndDaoMapper.toEntity(receiptDomain);

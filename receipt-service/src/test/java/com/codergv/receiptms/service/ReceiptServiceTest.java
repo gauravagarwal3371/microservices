@@ -18,6 +18,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,11 +72,14 @@ class ReceiptServiceTest {
         String studentId = "123";
         FeeCollectionDTO feeCollectionDTO = new FeeCollectionDTO();
         feeCollectionDTO.setStudentId("123");
+        feeCollectionDTO.setTimestamp(LocalDateTime.now());
+        List<FeeCollectionDTO> feeCollectionDTOS = new LinkedList<>();
+        feeCollectionDTOS.add(feeCollectionDTO);
 
-        ResponseEntity<FeeCollectionDTO> feeCollectionResponseEntity = ResponseEntity.ok(feeCollectionDTO);
+        ResponseEntity<List<FeeCollectionDTO>> feeCollectionResponseEntity = ResponseEntity.ok(feeCollectionDTOS);
         when(feeCollectionClient.getCollectedFeeByStudentId(studentId)).thenReturn(feeCollectionResponseEntity);
 
-        assertEquals(feeCollectionDTO, receiptService.getCollectedFeeByStudentIdWithRetry(studentId));
+        assertEquals(feeCollectionDTOS, receiptService.getCollectedFeeByStudentIdWithRetry(studentId));
     }
 
     @Test
@@ -89,12 +95,15 @@ class ReceiptServiceTest {
         receiptDomain.setStudentId("123");
         ReceiptDAO receiptDAO = new ReceiptDAO();
         receiptDAO.setStudentId("123");
+        feeCollectionDTO.setTimestamp(LocalDateTime.now());
+        List<FeeCollectionDTO> feeCollectionDTOS = new LinkedList<>();
+        feeCollectionDTOS.add(feeCollectionDTO);
 
         ResponseEntity<StudentDTO> studentResponseEntity = ResponseEntity.ok(studentDTO);
         when(studentClient.getStudentById(studentId)).thenReturn(studentResponseEntity);
 
         // Mocking the behavior of feeCollectionClient.getCollectedFeeByStudentId(studentId)
-        ResponseEntity<FeeCollectionDTO> feeCollectionResponseEntity = ResponseEntity.ok(feeCollectionDTO);
+        ResponseEntity<List<FeeCollectionDTO>> feeCollectionResponseEntity = ResponseEntity.ok(feeCollectionDTOS);
         when(feeCollectionClient.getCollectedFeeByStudentId(studentId)).thenReturn(feeCollectionResponseEntity);
         when(receiptDtoAndDomainMapper.toDomain(any())).thenReturn(receiptDomain);
 //        when(ReferenceNumberUtil.getRandomReferenceNumber()).thenReturn(UUID.randomUUID().toString());
@@ -138,11 +147,14 @@ class ReceiptServiceTest {
         ReceiptDTO receiptDTO = new ReceiptDTO();
         ReceiptDomain receiptDomain = new ReceiptDomain();
         ReceiptDAO receiptDAO = new ReceiptDAO();
+        feeCollectionDTO.setTimestamp(LocalDateTime.now());
+        List<FeeCollectionDTO> feeCollectionDTOS = new LinkedList<>();
+        feeCollectionDTOS.add(feeCollectionDTO);
 
         ResponseEntity<StudentDTO> studentResponseEntity = ResponseEntity.ok(studentDTO);
         when(studentClient.getStudentById(studentId)).thenReturn(studentResponseEntity);
 
-        ResponseEntity<FeeCollectionDTO> feeCollectionResponseEntity = ResponseEntity.ok(feeCollectionDTO);
+        ResponseEntity<List<FeeCollectionDTO>> feeCollectionResponseEntity = ResponseEntity.ok(feeCollectionDTOS);
         when(feeCollectionClient.getCollectedFeeByStudentId(studentId)).thenReturn(feeCollectionResponseEntity);
         when( receiptDtoAndDomainMapper.toDomain(any())).thenReturn(receiptDomain);
         when(receiptDomainAndDaoMapper.toEntity(any())).thenReturn(receiptDAO);
